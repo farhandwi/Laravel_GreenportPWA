@@ -9,5 +9,23 @@
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
+  },
+  "resources/js/network-simulator.js": {
+    "file": "assets/network-simulator-B-YSxL5_.js",
+    "name": "network-simulator",
+    "src": "resources/js/network-simulator.js",
+    "isEntry": true
+  },
+  "resources/js/pwa-offline-tester.js": {
+    "file": "assets/pwa-offline-tester-BgV8O2vx.js",
+    "name": "pwa-offline-tester",
+    "src": "resources/js/pwa-offline-tester.js",
+    "isEntry": true
+  },
+  "resources/js/test-automation-runner.js": {
+    "file": "assets/test-automation-runner-CyvRuL7Z.js",
+    "name": "test-automation-runner",
+    "src": "resources/js/test-automation-runner.js",
+    "isEntry": true
   }
 }
