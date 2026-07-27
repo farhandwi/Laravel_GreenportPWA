@@ -93,14 +93,13 @@ class DashboardController extends Controller
     {
         $currentUser = Auth::user();
 
-        // Get audit data per month from database using SQLite compatible functions
+        // Get audit data per month from database (database-agnostic, kompatibel MySQL & SQLite)
         // Only get audits for the current auditor
-        $data = \App\Models\Audit::selectRaw('CAST(strftime("%m", created_at) as INTEGER) as month, COUNT(*) as total')
-            ->where('auditor_id', $currentUser->id)
-            ->whereRaw('strftime("%Y", created_at) = ?', [date('Y')])
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
+        $data = \App\Models\Audit::where('auditor_id', $currentUser->id)
+            ->whereYear('created_at', date('Y'))
+            ->get()
+            ->groupBy(fn ($audit) => (int) $audit->created_at->format('n'))
+            ->map->count();
 
         $labels = [];
         $values = [];
@@ -177,8 +176,8 @@ class DashboardController extends Controller
 
         // Get audits this month
         $auditsThisMonth = \App\Models\Audit::where('auditor_id', $user->id)
-            ->whereRaw('strftime("%Y", created_at) = ?', [$currentYear])
-            ->whereRaw('strftime("%m", created_at) = ?', [$currentMonth])
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
             ->count();
 
         // Get pending documents/findings

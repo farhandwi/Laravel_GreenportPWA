@@ -60,12 +60,11 @@ class DashboardAuditorController extends Controller
 
     private function getLineChartData()
     {
-        // Contoh: ambil jumlah dokumen diaudit per bulan using SQLite compatible functions
-        $data = \App\Models\Audit::selectRaw('CAST(strftime("%m", created_at) as INTEGER) as month, COUNT(*) as total')
-            ->whereRaw('strftime("%Y", created_at) = ?', [date('Y')])
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('total', 'month');
+        // Ambil jumlah dokumen diaudit per bulan (database-agnostic, kompatibel MySQL & SQLite)
+        $data = \App\Models\Audit::whereYear('created_at', date('Y'))
+            ->get()
+            ->groupBy(fn ($audit) => (int) $audit->created_at->format('n'))
+            ->map->count();
 
         $labels = [];
         $values = [];
